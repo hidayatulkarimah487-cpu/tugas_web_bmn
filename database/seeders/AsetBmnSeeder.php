@@ -4,16 +4,16 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Database\Seeders\AsetBmnSeeder;
+use App\Models\AsetBmn;
 
-class DatabaseSeeder extends Seeder
+class AsetBmnSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
-        $this->call([
-            AsetBmnSeeder::class,
-        ]);
+        //
+        AsetBmn::factory()->count(15)->create();
     }
 }
