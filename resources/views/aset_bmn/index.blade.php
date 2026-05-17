@@ -4,7 +4,7 @@
 
 <h2 class="mb-4">Data Inventaris BMN</h2>
 
-<a href="#" class="btn btn-primary mb-3">
+<a href="{{ route('aset_bmn.create') }}" class="btn btn-primary mb-3">
     Tambah Data
 </a>
 
@@ -21,16 +21,20 @@
         </tr>
     </thead>
 
-    <tbody>
+   <tbody>
+
+        @foreach ($asetBmns as $item)
         <tr>
-            <td>1</td>
-            <td>BMN-001</td>
-            <td>Laptop</td>
-            <td>Elektronik</td>
-            <td>Lab Komputer</td>
-            <td>2024</td>
-            <td>Baik</td>
+            <td>{{ $loop->iteration }}</td>
+            <td>{{ $item->kode_aset }}</td>
+            <td>{{ $item->nama_barang }}</td>
+            <td>{{ $item->kategori }}</td>
+            <td>{{ $item->lokasi }}</td>
+            <td>{{ $item->tahun_perolehan }}</td>
+            <td>{{ $item->kondisi }}</td>
         </tr>
+        @endforeach
+
     </tbody>
 </table>
 
