@@ -6,26 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('aset_bmns', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_aset');
+            $table->string('kode_aset')->unique();
             $table->string('nama_barang');
-            $table->string('kategori');
-            $table->string('lokasi');
-            $table->year('tahun_perolehan');
-            $table->string('kondisi');
+            $table->enum('kategori_barang', ['Mebel', 'Elektronik', 'Kendaraan']);
+            $table->string('lokasi_ruangan');
+            $table->integer('tahun_perolehan')->unsigned();
+            $table->enum('kondisi', ['Baik', 'Rusak Ringan', 'Rusak Berat']);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('aset_bmns');

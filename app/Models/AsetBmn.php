@@ -12,8 +12,8 @@ class AsetBmn extends Model
     protected $fillable = [
         'kode_aset',
         'nama_barang',
-        'kategori',
-        'lokasi',
+        'kategori_barang',
+        'lokasi_ruangan',
         'tahun_perolehan',
         'kondisi',
     ];

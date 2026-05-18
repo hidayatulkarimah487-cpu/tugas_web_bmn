@@ -2,28 +2,37 @@
 
 namespace Database\Factories;
 
-use App\Models\AsetBmn;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<AsetBmn>
- */
 class AsetBmnFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
-    return [
-        'kode_aset' => $this->faker->unique()->bothify('BMN-###'),
-        'nama_barang' => $this->faker->word(),
-        'kategori' => $this->faker->randomElement(['Mebel', 'Elektronik', 'Kendaraan']),
-        'lokasi' => $this->faker->city(),
-        'tahun_perolehan' => $this->faker->year(),
-        'kondisi' => $this->faker->randomElement(['Baik', 'Rusak Ringan', 'Rusak Berat']),
-    ];
+        return [
+            'kode_aset' => 'BMN-' . fake()->unique()->numberBetween(10000, 99999),
+            'nama_barang' => fake()->randomElement([
+                'Meja Dosen',
+                'Kursi Kuliah',
+                'Lemari Arsip',
+                'Laptop Inventaris',
+                'Proyektor',
+                'Printer',
+                'AC Ruangan',
+                'Motor Operasional',
+                'Mobil Operasional',
+                'Rak Buku',
+            ]),
+            'kategori_barang' => fake()->randomElement(['Mebel', 'Elektronik', 'Kendaraan']),
+            'lokasi_ruangan' => fake()->randomElement([
+                'Ruang Dosen TI',
+                'Laboratorium Komputer',
+                'Ruang Administrasi',
+                'Ruang Dekanat',
+                'Ruang Kelas A',
+                'Ruang Kelas B',
+            ]),
+            'tahun_perolehan' => fake()->numberBetween(2018, 2025),
+            'kondisi' => fake()->randomElement(['Baik', 'Rusak Ringan', 'Rusak Berat']),
+        ];
     }
 }
