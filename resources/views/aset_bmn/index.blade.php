@@ -69,7 +69,7 @@
             </table>
         </div>
 
-        {{ $aset->links() }}
+        {{ $aset->links('pagination::bootstrap-5') }}
     </div>
 </div>
 @endsection
