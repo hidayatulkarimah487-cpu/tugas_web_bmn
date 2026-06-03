@@ -1,217 +1,223 @@
 @extends('layouts.app')
 
 @section('content')
-
-<div class="p-4 mb-4 rounded-4 text-white shadow-sm"
-style="background: linear-gradient(135deg,#2563eb,#1e40af);">
-
-    <div class="d-flex justify-content-between align-items-center">
-
-        <div>
-            <h2 class="fw-bold mb-2">
-                Sistem Inventarisasi Aset BMN
-            </h2>
-
-            <p class="mb-2 opacity-75">
-                Kelola data inventaris Barang Milik Negara Fakultas Teknologi Informasi
+<div class="hero-card mb-4">
+    <div class="row align-items-center g-4 position-relative" style="z-index: 1;">
+        <div class="col-lg-8">
+            <span class="badge rounded-pill text-bg-primary mb-3 px-3 py-2">
+                <i class="bi bi-stars me-1"></i> Sistem Inventarisasi Aset BMN
+            </span>
+            <h1 class="hero-title">Kelola Aset BMN dengan Tampilan Lebih Modern</h1>
+            <p class="hero-subtitle">
+                Website ini digunakan untuk mencatat, memantau, dan mengelola data aset BMN berdasarkan kode aset,
+                kategori barang, lokasi ruangan, tahun perolehan, dan kondisi barang.
             </p>
-
-            <hr class="border-light opacity-25"
-            style="width:85%">
         </div>
 
-        <div style="font-size:75px;">
-            📦
+        <div class="col-lg-4 text-lg-end">
+            <a href="{{ route('aset-bmn.create') }}" class="btn btn-main">
+                <i class="bi bi-plus-circle me-1"></i> Tambah Aset
+            </a>
         </div>
-
     </div>
-
 </div>
 
-
-<div class="card shadow border-0 rounded-4">
-
-<div class="card-header bg-white d-flex justify-content-between align-items-center py-4">
-
-<h3 class="mb-0 fw-bold">
-Data Aset BMN
-</h3>
-
-<a href="{{ route('aset-bmn.create') }}"
-class="btn btn-primary rounded-pill px-4">
-
-+ Tambah Aset
-
-</a>
-
-</div>
-
-
-<div class="card-body">
-
-<div class="table-responsive">
-
-<table class="table table-hover align-middle">
-
-<thead class="table-primary">
-
-<tr>
-
-<th>No</th>
-<th>Kode Aset</th>
-<th>Nama Barang</th>
-<th>Kategori</th>
-<th>Lokasi</th>
-<th>Tahun</th>
-<th>Kondisi</th>
-<th width="190">Aksi</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-@forelse ($aset as $item)
-
-<tr>
-
-<td>
-{{ $aset->firstItem()+$loop->index }}
-</td>
-
-<td>
-{{ $item->kode_aset }}
-</td>
-
-<td class="fw-semibold">
-{{ $item->nama_barang }}
-</td>
-
-<td>
-{{ $item->kategori_barang }}
-</td>
-
-<td>
-{{ $item->lokasi_ruangan }}
-</td>
-
-<td>
-{{ $item->tahun_perolehan }}
-</td>
-
-<td>
-
-@if ($item->kondisi == 'Baik')
-
-<span class="badge bg-success rounded-pill px-3">
-{{ $item->kondisi }}
-</span>
-
-@elseif($item->kondisi == 'Rusak Ringan')
-
-<span class="badge bg-warning text-dark rounded-pill px-3">
-{{ $item->kondisi }}
-</span>
-
-@else
-
-<span class="badge bg-danger rounded-pill px-3">
-{{ $item->kondisi }}
-</span>
-
+@if(session('success'))
+    <div class="alert alert-success shadow-sm mb-4">
+        <i class="bi bi-check-circle me-2"></i>
+        {{ session('success') }}
+    </div>
 @endif
 
-</td>
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="stat-label">Total Aset</p>
+                    <p class="stat-number">{{ $totalAset }}</p>
+                </div>
+                <div class="stat-icon icon-blue">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<td>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="stat-label">Kondisi Baik</p>
+                    <p class="stat-number">{{ $asetBaik }}</p>
+                </div>
+                <div class="stat-icon icon-green">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<a href="{{ route('aset-bmn.show',$item->id) }}"
-class="btn btn-info btn-sm">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="stat-label">Rusak Ringan</p>
+                    <p class="stat-number">{{ $asetRusakRingan }}</p>
+                </div>
+                <div class="stat-icon icon-yellow">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 
-Detail
-
-</a>
-
-
-<a href="{{ route('aset-bmn.edit',$item->id) }}"
-class="btn btn-warning btn-sm">
-
-Edit
-
-</a>
-
-
-<form
-action="{{ route('aset-bmn.destroy',$item->id) }}"
-method="POST"
-class="d-inline"
-onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-
-@csrf
-@method('DELETE')
-
-<button class="btn btn-danger btn-sm">
-
-Hapus
-
-</button>
-
-</form>
-
-</td>
-
-</tr>
-
-@empty
-
-<tr>
-
-<td colspan="8"
-class="text-center py-4">
-
-Belum ada data aset BMN.
-
-</td>
-
-</tr>
-
-@endforelse
-
-</tbody>
-
-</table>
-
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="stat-label">Rusak Berat</p>
+                    <p class="stat-number">{{ $asetRusakBerat }}</p>
+                </div>
+                <div class="stat-icon icon-red">
+                    <i class="bi bi-x-octagon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<div class="content-card">
+    <div class="card-topbar">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+            <div>
+                <h4 class="fw-bold mb-1">Daftar Data Aset</h4>
+                <p class="text-muted mb-0">Cari dan filter data aset sesuai kebutuhan.</p>
+            </div>
+        </div>
+    </div>
 
-<div class="mt-4 text-center">
+    <div class="card-body-custom">
+        <form action="{{ route('aset-bmn.index') }}" method="GET" class="filter-box mb-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Cari Aset</label>
+                    <input type="text" name="search" class="form-control"
+                        placeholder="Kode, nama barang, atau lokasi..."
+                        value="{{ request('search') }}">
+                </div>
 
-{{ $aset->links('pagination::bootstrap-5') }}
+                <div class="col-md-3">
+                    <label class="form-label">Kategori</label>
+                    <select name="kategori_barang" class="form-select">
+                        <option value="">Semua Kategori</option>
+                        <option value="Mebel" {{ request('kategori_barang') == 'Mebel' ? 'selected' : '' }}>Mebel</option>
+                        <option value="Elektronik" {{ request('kategori_barang') == 'Elektronik' ? 'selected' : '' }}>Elektronik</option>
+                        <option value="Kendaraan" {{ request('kategori_barang') == 'Kendaraan' ? 'selected' : '' }}>Kendaraan</option>
+                    </select>
+                </div>
 
-<div class="mt-3 text-muted">
+                <div class="col-md-3">
+                    <label class="form-label">Kondisi</label>
+                    <select name="kondisi" class="form-select">
+                        <option value="">Semua Kondisi</option>
+                        <option value="Baik" {{ request('kondisi') == 'Baik' ? 'selected' : '' }}>Baik</option>
+                        <option value="Rusak Ringan" {{ request('kondisi') == 'Rusak Ringan' ? 'selected' : '' }}>Rusak Ringan</option>
+                        <option value="Rusak Berat" {{ request('kondisi') == 'Rusak Berat' ? 'selected' : '' }}>Rusak Berat</option>
+                    </select>
+                </div>
 
-Showing
+                <div class="col-md-2 d-grid">
+                    <button class="btn btn-main" type="submit">
+                        <i class="bi bi-search me-1"></i> Cari
+                    </button>
+                </div>
+            </div>
 
-{{ $aset->firstItem() }}
+            @if(request('search') || request('kategori_barang') || request('kondisi'))
+                <div class="mt-3">
+                    <a href="{{ route('aset-bmn.index') }}" class="btn btn-soft btn-sm">
+                        <i class="bi bi-arrow-clockwise me-1"></i> Reset Filter
+                    </a>
+                </div>
+            @endif
+        </form>
 
-to
+        <div class="table-responsive">
+            <table class="table table-modern align-middle">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kode Aset</th>
+                        <th>Nama Barang</th>
+                        <th>Kategori</th>
+                        <th>Lokasi</th>
+                        <th>Tahun</th>
+                        <th>Kondisi</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
 
-{{ $aset->lastItem() }}
+                <tbody>
+                    @forelse($aset as $item)
+                        @php
+                            $statusClass = match ($item->kondisi) {
+                                'Baik' => 'status-good',
+                                'Rusak Ringan' => 'status-light',
+                                default => 'status-heavy',
+                            };
+                        @endphp
 
-of
+                        <tr>
+                            <td>{{ $loop->iteration + ($aset->currentPage() - 1) * $aset->perPage() }}</td>
+                            <td><span class="asset-code">{{ $item->kode_aset }}</span></td>
+                            <td class="fw-bold">{{ $item->nama_barang }}</td>
+                            <td><span class="badge-category">{{ $item->kategori_barang }}</span></td>
+                            <td>{{ $item->lokasi_ruangan }}</td>
+                            <td>{{ $item->tahun_perolehan }}</td>
+                            <td><span class="badge-status {{ $statusClass }}">{{ $item->kondisi }}</span></td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="{{ route('aset-bmn.show', $item->id) }}" class="btn btn-info btn-sm text-white action-btn" title="Detail">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
 
-{{ $aset->total() }}
+                                    <a href="{{ route('aset-bmn.edit', $item->id) }}" class="btn btn-warning btn-sm action-btn" title="Edit">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
 
-results
+                                    <form action="{{ route('aset-bmn.destroy', $item->id) }}" method="POST"
+                                        onsubmit="return confirm('Yakin ingin menghapus data aset ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm action-btn" title="Hapus">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8">
+                                <div class="text-center py-5">
+                                    <i class="bi bi-inbox fs-1 text-muted"></i>
+                                    <h5 class="fw-bold mt-3">Data aset belum tersedia</h5>
+                                    <p class="text-muted">Silakan tambahkan data aset terlebih dahulu.</p>
+                                    <a href="{{ route('aset-bmn.create') }}" class="btn btn-main">
+                                        <i class="bi bi-plus-circle me-1"></i> Tambah Aset
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
+        <div class="mt-4">
+            {{ $aset->links() }}
+        </div>
+    </div>
 </div>
-
-</div>
-
-
-</div>
-
-</div>
-
 @endsection

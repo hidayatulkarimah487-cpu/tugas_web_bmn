@@ -8,11 +8,40 @@ use Illuminate\Validation\Rule;
 
 class AsetBmnController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $aset = AsetBmn::latest()->paginate(10);
+        $search = $request->search;
+        $kategori = $request->kategori_barang;
+        $kondisi = $request->kondisi;
 
-        return view('aset_bmn.index', compact('aset'));
+        $aset = AsetBmn::query()
+            ->when($search, function ($query) use ($search) {
+                $query->where('kode_aset', 'like', "%{$search}%")
+                    ->orWhere('nama_barang', 'like', "%{$search}%")
+                    ->orWhere('lokasi_ruangan', 'like', "%{$search}%");
+            })
+            ->when($kategori, function ($query) use ($kategori) {
+                $query->where('kategori_barang', $kategori);
+            })
+            ->when($kondisi, function ($query) use ($kondisi) {
+                $query->where('kondisi', $kondisi);
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        $totalAset = AsetBmn::count();
+        $asetBaik = AsetBmn::where('kondisi', 'Baik')->count();
+        $asetRusakRingan = AsetBmn::where('kondisi', 'Rusak Ringan')->count();
+        $asetRusakBerat = AsetBmn::where('kondisi', 'Rusak Berat')->count();
+
+        return view('aset_bmn.index', compact(
+            'aset',
+            'totalAset',
+            'asetBaik',
+            'asetRusakRingan',
+            'asetRusakBerat'
+        ));
     }
 
     public function create()
@@ -35,7 +64,7 @@ class AsetBmnController extends Controller
 
         return redirect()
             ->route('aset-bmn.index')
-            ->with('success', 'Data aset BMN berhasil ditambahkan.');
+            ->with('success', 'Data aset berhasil ditambahkan.');
     }
 
     public function show(AsetBmn $aset_bmn)
@@ -66,7 +95,7 @@ class AsetBmnController extends Controller
 
         return redirect()
             ->route('aset-bmn.index')
-            ->with('success', 'Data aset BMN berhasil diperbarui.');
+            ->with('success', 'Data aset berhasil diperbarui.');
     }
 
     public function destroy(AsetBmn $aset_bmn)
@@ -75,6 +104,6 @@ class AsetBmnController extends Controller
 
         return redirect()
             ->route('aset-bmn.index')
-            ->with('success', 'Data aset BMN berhasil dihapus.');
+            ->with('success', 'Data aset berhasil dihapus.');
     }
 }
