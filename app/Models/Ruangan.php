@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Ruangan extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'nama_ruangan',
+        'gedung',
+        'penanggung_jawab',
+    ];
+
+    public function aset()
+    {
+        return $this->hasMany(AsetBmn::class);
+    }
+}
