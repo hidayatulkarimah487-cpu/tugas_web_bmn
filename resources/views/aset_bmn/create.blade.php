@@ -47,7 +47,8 @@
                         type="text"
                         name="kode_aset"
                         class="form-control @error('kode_aset') is-invalid @enderror"
-                        value="{{ old('kode_aset') }}">
+                        value="{{ old('kode_aset') }}"
+                        placeholder="Contoh: BMN-001">
 
                     @error('kode_aset')
                         <div class="invalid-feedback">
@@ -64,7 +65,8 @@
                         type="text"
                         name="nama_barang"
                         class="form-control @error('nama_barang') is-invalid @enderror"
-                        value="{{ old('nama_barang') }}">
+                        value="{{ old('nama_barang') }}"
+                        placeholder="Contoh: Meja Kerja">
 
                     @error('nama_barang')
                         <div class="invalid-feedback">
@@ -75,9 +77,7 @@
 
                 {{-- Kategori --}}
                 <div class="col-md-6">
-                    <label class="form-label">
-                        Kategori Barang
-                    </label>
+                    <label class="form-label">Kategori Barang</label>
 
                     <select
                         name="kategori_barang"
@@ -99,7 +99,6 @@
                             {{ old('kategori_barang') == 'Kendaraan' ? 'selected' : '' }}>
                             Kendaraan
                         </option>
-
                     </select>
 
                     @error('kategori_barang')
@@ -109,35 +108,18 @@
                     @enderror
                 </div>
 
-                {{-- Ruangan --}}
+                {{-- Lokasi Ruangan --}}
                 <div class="col-md-6">
-                    <label class="form-label">
-                        Lokasi Ruangan
-                    </label>
+                    <label class="form-label">Lokasi Ruangan</label>
 
-                    <select
-                        name="ruangan_id"
-                        class="form-select @error('ruangan_id') is-invalid @enderror">
+                    <input
+                        type="text"
+                        name="lokasi_ruangan"
+                        class="form-control @error('lokasi_ruangan') is-invalid @enderror"
+                        value="{{ old('lokasi_ruangan') }}"
+                        placeholder="Contoh: Ruang Admin">
 
-                        <option value="">
-                            -- Pilih Ruangan --
-                        </option>
-
-                        @foreach($ruangan as $r)
-
-                            <option
-                                value="{{ $r->id }}"
-                                {{ old('ruangan_id') == $r->id ? 'selected' : '' }}>
-
-                                {{ $r->nama_ruangan }}
-
-                            </option>
-
-                        @endforeach
-
-                    </select>
-
-                    @error('ruangan_id')
+                    @error('lokasi_ruangan')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
@@ -146,15 +128,14 @@
 
                 {{-- Tahun --}}
                 <div class="col-md-6">
-                    <label class="form-label">
-                        Tahun Perolehan
-                    </label>
+                    <label class="form-label">Tahun Perolehan</label>
 
                     <input
                         type="number"
                         name="tahun_perolehan"
                         class="form-control @error('tahun_perolehan') is-invalid @enderror"
-                        value="{{ old('tahun_perolehan') }}">
+                        value="{{ old('tahun_perolehan') }}"
+                        placeholder="Contoh: 2025">
 
                     @error('tahun_perolehan')
                         <div class="invalid-feedback">
@@ -165,17 +146,13 @@
 
                 {{-- Kondisi --}}
                 <div class="col-md-6">
-                    <label class="form-label">
-                        Kondisi
-                    </label>
+                    <label class="form-label">Kondisi</label>
 
                     <select
                         name="kondisi"
                         class="form-select @error('kondisi') is-invalid @enderror">
 
-                        <option value="">
-                            -- Pilih Kondisi --
-                        </option>
+                        <option value="">-- Pilih Kondisi --</option>
 
                         <option value="Baik"
                             {{ old('kondisi') == 'Baik' ? 'selected' : '' }}>
@@ -191,7 +168,6 @@
                             {{ old('kondisi') == 'Rusak Berat' ? 'selected' : '' }}>
                             Rusak Berat
                         </option>
-
                     </select>
 
                     @error('kondisi')
@@ -203,14 +179,13 @@
 
                 {{-- Foto --}}
                 <div class="col-md-12">
-                    <label class="form-label">
-                        Foto Fisik Aset
-                    </label>
+                    <label class="form-label">Foto Fisik Aset</label>
 
                     <input
                         type="file"
                         name="foto_aset"
-                        class="form-control @error('foto_aset') is-invalid @enderror">
+                        class="form-control @error('foto_aset') is-invalid @enderror"
+                        accept="image/*">
 
                     @error('foto_aset')
                         <div class="invalid-feedback">
@@ -223,22 +198,14 @@
 
             <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
 
-                <a href="{{ route('aset-bmn.index') }}"
-                   class="btn btn-soft">
-
+                <a href="{{ route('aset-bmn.index') }}" class="btn btn-soft">
                     <i class="bi bi-x-circle me-1"></i>
                     Batal
-
                 </a>
 
-                <button
-                    type="submit"
-                    class="btn btn-main">
-
+                <button type="submit" class="btn btn-main">
                     <i class="bi bi-save me-1"></i>
-
                     Simpan Data
-
                 </button>
 
             </div>

@@ -3,29 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\AsetBmn;
-use App\Models\Ruangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class AsetBmnController extends Controller
 {
-    /**
-     * Menampilkan daftar aset
-     */
     public function index(Request $request)
     {
         $search = $request->search;
         $kategori = $request->kategori_barang;
         $kondisi = $request->kondisi;
 
-        $aset = AsetBmn::with('ruangan')
+        $aset = AsetBmn::query()
             ->when($search, function ($query) use ($search) {
-                $query->where('kode_aset', 'like', "%{$search}%")
-                    ->orWhere('nama_barang', 'like', "%{$search}%")
-                    ->orWhereHas('ruangan', function ($q) use ($search) {
-                        $q->where('nama_ruangan', 'like', "%{$search}%");
-                    });
+                $query->where(function ($q) use ($search) {
+                    $q->where('kode_aset', 'like', "%{$search}%")
+                        ->orWhere('nama_barang', 'like', "%{$search}%")
+                        ->orWhere('lokasi_ruangan', 'like', "%{$search}%");
+                });
             })
             ->when($kategori, function ($query) use ($kategori) {
                 $query->where('kategori_barang', $kategori);
@@ -51,34 +47,25 @@ class AsetBmnController extends Controller
         ));
     }
 
-    /**
-     * Form tambah aset
-     */
     public function create()
     {
-        $ruangan = Ruangan::all();
-
-        return view('aset_bmn.create', compact('ruangan'));
+        return view('aset_bmn.create');
     }
 
-    /**
-     * Simpan data aset
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'kode_aset' => 'required|unique:aset_bmns,kode_aset',
             'nama_barang' => 'required',
             'kategori_barang' => 'required|in:Mebel,Elektronik,Kendaraan',
-            'ruangan_id' => 'required',
+            'lokasi_ruangan' => 'required',
             'tahun_perolehan' => 'required|integer|digits:4',
             'kondisi' => 'required|in:Baik,Rusak Ringan,Rusak Berat',
-            'foto_aset' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'foto_aset' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         if ($request->hasFile('foto_aset')) {
-            $validated['foto_aset'] = $request->file('foto_aset')
-                ->store('aset', 'public');
+            $validated['foto_aset'] = $request->file('foto_aset')->store('aset', 'public');
         }
 
         AsetBmn::create($validated);
@@ -88,30 +75,16 @@ class AsetBmnController extends Controller
             ->with('success', 'Data aset berhasil ditambahkan.');
     }
 
-    /**
-     * Detail aset
-     */
     public function show(AsetBmn $aset_bmn)
     {
         return view('aset_bmn.show', compact('aset_bmn'));
     }
 
-    /**
-     * Form edit
-     */
     public function edit(AsetBmn $aset_bmn)
     {
-        $ruangan = Ruangan::all();
-
-        return view(
-            'aset_bmn.edit',
-            compact('aset_bmn', 'ruangan')
-        );
+        return view('aset_bmn.edit', compact('aset_bmn'));
     }
 
-    /**
-     * Update aset
-     */
     public function update(Request $request, AsetBmn $aset_bmn)
     {
         $validated = $request->validate([
@@ -121,23 +94,18 @@ class AsetBmnController extends Controller
             ],
             'nama_barang' => 'required',
             'kategori_barang' => 'required|in:Mebel,Elektronik,Kendaraan',
-            'ruangan_id' => 'required',
+            'lokasi_ruangan' => 'required',
             'tahun_perolehan' => 'required|integer|digits:4',
             'kondisi' => 'required|in:Baik,Rusak Ringan,Rusak Berat',
-            'foto_aset' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'foto_aset' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         if ($request->hasFile('foto_aset')) {
-
-            if (
-                $aset_bmn->foto_aset &&
-                Storage::disk('public')->exists($aset_bmn->foto_aset)
-            ) {
+            if ($aset_bmn->foto_aset && Storage::disk('public')->exists($aset_bmn->foto_aset)) {
                 Storage::disk('public')->delete($aset_bmn->foto_aset);
             }
 
-            $validated['foto_aset'] = $request->file('foto_aset')
-                ->store('aset', 'public');
+            $validated['foto_aset'] = $request->file('foto_aset')->store('aset', 'public');
         }
 
         $aset_bmn->update($validated);
@@ -147,15 +115,9 @@ class AsetBmnController extends Controller
             ->with('success', 'Data aset berhasil diperbarui.');
     }
 
-    /**
-     * Hapus aset
-     */
     public function destroy(AsetBmn $aset_bmn)
     {
-        if (
-            $aset_bmn->foto_aset &&
-            Storage::disk('public')->exists($aset_bmn->foto_aset)
-        ) {
+        if ($aset_bmn->foto_aset && Storage::disk('public')->exists($aset_bmn->foto_aset)) {
             Storage::disk('public')->delete($aset_bmn->foto_aset);
         }
 

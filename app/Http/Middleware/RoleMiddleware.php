@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
@@ -13,17 +14,12 @@ class RoleMiddleware
         Closure $next,
         string $role
     ): Response {
-
-        if (!auth()->check()) {
-
-            return redirect('/login');
-
+        if (!Auth::check()) {
+            return redirect()->route('login');
         }
 
-        if (auth()->user()->role != $role) {
-
-            abort(403);
-
+        if (Auth::user()->role !== $role) {
+            abort(403, 'Akses hanya untuk admin.');
         }
 
         return $next($request);

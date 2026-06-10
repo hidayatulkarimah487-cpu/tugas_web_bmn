@@ -19,27 +19,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <!-- CSS Project -->
+    <!-- CSS & JS Project -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
 </head>
 
 <body>
 
-    {{-- Navbar --}}
-
-    @include('layouts.navigation')
+    {{-- Navbar hanya tampil kalau sudah login --}}
+    @auth
+        @include('layouts.navigation')
+    @endauth
 
     {{-- Content --}}
-
     <main class="py-4">
-
         @yield('content')
-
     </main>
 
     {{-- Bootstrap JS --}}
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

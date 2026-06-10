@@ -13,6 +13,7 @@ class AsetBmn extends Model
         'kode_aset',
         'nama_barang',
         'kategori_barang',
+        'lokasi_ruangan',
         'ruangan_id',
         'tahun_perolehan',
         'kondisi',

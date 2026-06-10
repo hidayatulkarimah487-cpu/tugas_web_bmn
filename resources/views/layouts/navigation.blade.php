@@ -10,7 +10,10 @@
             class="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
-            data-bs-target="#navbarNav">
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
 
             <span class="navbar-toggler-icon"></span>
 
@@ -21,55 +24,45 @@
             <ul class="navbar-nav me-auto">
 
                 <li class="nav-item">
-
-                    <a
-                        class="nav-link"
-                        href="{{ route('aset-bmn.index') }}">
-
+                    <a class="nav-link {{ request()->routeIs('aset-bmn.*') ? 'active' : '' }}"
+                       href="{{ route('aset-bmn.index') }}">
+                        <i class="bi bi-box-seam me-1"></i>
                         Data Aset
-
                     </a>
-
                 </li>
 
-                <li class="nav-item">
-
-                    <a
-                        class="nav-link"
-                        href="{{ route('ruangan.index') }}">
-
-                        Master Ruangan
-
-                    </a>
-
-                </li>
+                @if(auth()->user()->role === 'admin')
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('ruangan.*') ? 'active' : '' }}"
+                           href="{{ route('ruangan.index') }}">
+                            <i class="bi bi-building me-1"></i>
+                            Master Ruangan
+                        </a>
+                    </li>
+                @endif
 
             </ul>
 
             @auth
+                <span class="navbar-text me-3">
+                    <i class="bi bi-person-circle me-1"></i>
+                    {{ Auth::user()->name }}
 
-            <span class="navbar-text me-3">
+                    @if(Auth::user()->role === 'admin')
+                        <span class="badge text-bg-warning ms-2">Admin</span>
+                    @else
+                        <span class="badge text-bg-info ms-2 text-dark">User</span>
+                    @endif
+                </span>
 
-                {{ Auth::user()->name }}
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
 
-            </span>
-
-            <form
-                action="{{ route('logout') }}"
-                method="POST">
-
-                @csrf
-
-                <button
-                    type="submit"
-                    class="btn btn-danger btn-sm">
-
-                    Logout
-
-                </button>
-
-            </form>
-
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="bi bi-box-arrow-right me-1"></i>
+                        Logout
+                    </button>
+                </form>
             @endauth
 
         </div>
