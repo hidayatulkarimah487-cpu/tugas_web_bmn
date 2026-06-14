@@ -115,6 +115,24 @@ class AsetBmnController extends Controller
             ->with('success', 'Data aset berhasil diperbarui.');
     }
 
+    public function downloadFoto(AsetBmn $aset_bmn)
+    {
+        if (!$aset_bmn->foto_aset) {
+            abort(404, 'Foto aset tidak ditemukan.');
+        }
+
+        $filePath = storage_path('app/public/' . $aset_bmn->foto_aset);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'File foto tidak ditemukan di storage.');
+        }
+
+        $extension = pathinfo($aset_bmn->foto_aset, PATHINFO_EXTENSION);
+        $fileName = 'foto-' . $aset_bmn->kode_aset . '.' . $extension;
+
+        return response()->download($filePath, $fileName);
+    }
+
     public function destroy(AsetBmn $aset_bmn)
     {
         if ($aset_bmn->foto_aset && Storage::disk('public')->exists($aset_bmn->foto_aset)) {

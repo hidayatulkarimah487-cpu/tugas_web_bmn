@@ -48,8 +48,13 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('ruangan', RuanganController::class);
     });
 
+    // Semua user login boleh download foto aset
+    // Ditaruh sebelum detail agar tidak bentrok dengan route /aset-bmn/{aset_bmn}
+    Route::get('/aset-bmn/{aset_bmn}/foto/download', [AsetBmnController::class, 'downloadFoto'])
+        ->name('aset-bmn.download-foto');
+
     // Semua user login boleh lihat detail aset
-    // Ditaruh di bawah create/edit agar tidak bentrok
+    // Ditaruh di bawah create/edit/download agar tidak bentrok
     Route::get('/aset-bmn/{aset_bmn}', [AsetBmnController::class, 'show'])
         ->name('aset-bmn.show');
 

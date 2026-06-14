@@ -72,7 +72,75 @@
                             src="{{ asset('storage/' . $aset_bmn->foto_aset) }}"
                             alt="Foto {{ $aset_bmn->nama_barang }}"
                             class="img-fluid rounded-4 shadow-sm border"
-                            style="width: 100%; max-height: 280px; object-fit: cover;">
+                            style="width: 100%; max-height: 280px; object-fit: cover; cursor: pointer;"
+                            data-bs-toggle="modal"
+                            data-bs-target="#fotoModal">
+
+                        <div class="mt-3 d-flex justify-content-center gap-2 flex-wrap">
+                            <button
+                                type="button"
+                                class="btn btn-info btn-sm text-white"
+                                data-bs-toggle="modal"
+                                data-bs-target="#fotoModal">
+
+                                <i class="bi bi-eye me-1"></i>
+                                Buka Foto
+                            </button>
+
+                            <a
+                                href="{{ route('aset-bmn.download-foto', $aset_bmn->id) }}"
+                                class="btn btn-success btn-sm">
+
+                                <i class="bi bi-download me-1"></i>
+                                Unduh Foto
+                            </a>
+                        </div>
+
+                        {{-- Modal Foto --}}
+                        <div class="modal fade" id="fotoModal" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-xl">
+                                <div class="modal-content rounded-4">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="fotoModalLabel">
+                                            Foto {{ $aset_bmn->nama_barang }}
+                                        </h5>
+
+                                        <button
+                                            type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal"
+                                            aria-label="Close">
+                                        </button>
+                                    </div>
+
+                                    <div class="modal-body text-center">
+                                        <img
+                                            src="{{ asset('storage/' . $aset_bmn->foto_aset) }}"
+                                            alt="Foto {{ $aset_bmn->nama_barang }}"
+                                            class="img-fluid rounded-4"
+                                            style="max-height: 75vh; object-fit: contain;">
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <a
+                                            href="{{ route('aset-bmn.download-foto', $aset_bmn->id) }}"
+                                            class="btn btn-success">
+
+                                            <i class="bi bi-download me-1"></i>
+                                            Unduh Foto
+                                        </a>
+
+                                        <button
+                                            type="button"
+                                            class="btn btn-secondary"
+                                            data-bs-dismiss="modal">
+
+                                            Tutup
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     @else
                         <div class="d-flex flex-column align-items-center justify-content-center border rounded-4 bg-light"
                              style="height: 240px;">
